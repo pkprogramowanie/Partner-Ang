@@ -26,12 +26,12 @@
     <td mat-cell *matCellDef="let element"> {{element.customer.street}} {{ element.customer.streetNumber}} </td>
   </ng-container>
   <ng-container matColumnDef="place">
-    <th mat-header-cell *matHeaderCellDef>Miejscowosć</th>
+    <th mat-header-cell *matHeaderCellDef>Miejscowość</th>
     <td mat-cell *matCellDef="let element"> {{element.customer.place}} </td>
   </ng-container>
   <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef>Akcje</th>
-    <td mat-cell *matCellDef="let element"> <button (click)="delete(element.$key)">xx</button> </td>
+    <th mat-header-cell *matHeaderCellDef>Telefony</th>
+    <td mat-cell *matCellDef="let element"> <div *ngFor="let phone of element.customer.phones">{{ phone.phone }} - {{ phone.label }}</div> </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onSelectRow(row)"></tr>

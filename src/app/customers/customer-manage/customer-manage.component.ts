@@ -50,9 +50,10 @@ export class CustomerManageComponent implements OnInit {
       street: this.formData.controls.street.value,
       streetNumber: this.formData.controls.streetNumber.value,
       place: this.formData.controls.place.value,
-      postalCode: this.formData.controls.postalCode.value
+      postalCode: this.formData.controls.postalCode.value,
+      phones: this.formData.controls.phones.value.map( p => ({ phone: p.phone, label: p.label, default: false }) )
     };
-    console.log(this.mode);
+
     if (this.mode === Mode.Edit) {
       this.db.update(this.id, newCustomer);
     } else {
@@ -61,12 +62,15 @@ export class CustomerManageComponent implements OnInit {
     this.router.navigate(['/Klienci']);
   }
 
-
+  addPhone() {
+    console.log('dodaj');
+    const arr = <FormArray>this.formData.get('phones');
+    arr.push(new FormGroup({ phone: new FormControl(null), label: new FormControl(null), default: new FormControl(false) } ));
+  }
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
-      console.log(this.id);
       this.mode = Mode.Edit;
      }
     if (this.mode === Mode.Edit) {
@@ -79,14 +83,21 @@ export class CustomerManageComponent implements OnInit {
         this.formData.controls.streetNumber.setValue(data.get('streetNumber'));
         this.formData.controls.place.setValue(data.get('place'));
         this.formData.controls.postalCode.setValue(data.get('postalCode'));
+
+        const arr = <FormArray>this.formData.get('phones');
+        data.get('phones').forEach(p => {
+          arr.push(new FormGroup({ phone: new FormControl(p.phone), label: new FormControl(p.label) } ));
+        });
+
       });
 
     } else {
       this.title = 'Dodaj klienta';
       this.buttonContent = 'Dodaj';
-      this.formData.controls.phones.setValue([{phone: 'xx', label: 'yy'}]);
     }
   }
+
+
 }
 
 

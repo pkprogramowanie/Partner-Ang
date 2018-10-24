@@ -39,28 +39,28 @@
           </mat-form-field>
         </div>
       </div>
-      <div *ngFor="let phone of formData.get('phones').controls[0].controls; let i=index;">
-        l {{ phone | json }}
-      </div>
-      <div class="inline" formGroupName="phones">
-        <div *ngFor="let phone of formData.controlls; let i=index;">
+      <div id="phone-section" >
+        Telefony 
+        <button mat-icon-button type="button">
+          <mat-icon aria-label="Dodaj" (click)="addPhone()">add</mat-icon>
+        </button>
+        <div formArrayName="phones">
+            <div *ngFor="let phone of formData.get('phones')['controlls']; let i=index;">
+                <div [formGroupName]="i">
+                    <mat-form-field>
+                      <input matInput placeholder="Telefon" formControlName="phone" />
+                    </mat-form-field>
+        
+                    <mat-form-field>
+                      <input matInput placeholder="Etykieta" formControlName="label" />
+                    </mat-form-field>
 
-          <div class="half margin-right-10" [formGroupName]="i">
-            <mat-form-field>
-              <input matInput placeholder="Telefon" formControlName="phone" />
-            </mat-form-field>
-          </div>
-          <div class="half">
-            <mat-form-field>
-              <input matInput placeholder="Etykieta" formControlName="label" />
-            </mat-form-field>
-
-          </div>
-          <button mat-icon-button>
-            <mat-icon aria-label="Dodaj">add</mat-icon>
-          </button>
+                    <mat-form-field>
+                        <input matInput placeholder="Domyślny" formControlName="default" />
+                      </mat-form-field>
+                </div>
+            </div>
         </div>
-
       </div>
 
       <mat-card-actions>
