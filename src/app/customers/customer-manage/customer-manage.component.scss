@@ -1,0 +1,25 @@
+mat-card{
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 10vh;
+}
+
+mat-form-field{
+  display: inline;
+}
+
+.half{
+    width: 50%;
+  }
+
+mat-card-actions{
+  text-align: right;
+  margin-right: 10px;
+}
+
+.inline{
+  display: flex;
+  .margin-right-10{
+    margin-right: 10px;
+  }
+}

@@ -1,0 +1,30 @@
+<mat-card>
+  <mat-card-title >Klient: {{ customer?.ID }}<span class="right"><mat-icon (click)="onClickEdit()">edit</mat-icon><mat-icon (click)="onClickDelete()">delete</mat-icon></span></mat-card-title>
+  <mat-card-content>
+    <table>
+      <tr>
+        <td>Nazwa</td>
+        <td>{{ customer?.name }}</td>
+      </tr>
+      <tr>
+        <td>Adres</td>
+        <td>ul. {{ customer?.street }} {{ customer?.streetNumber }}, {{ customer?.postalCode }} {{ customer?.place }}</td>
+      </tr>
+      <tr>
+        <td>Telefon</td>
+        <td>
+          <div *ngFor="let phone of customer?.phones" [ngClass]="{'bolder': phone.default}">{{ phone.phone }} {{
+            phone?.label }}</div>
+        </td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>
+          <div *ngFor="let email of customer?.emails" [ngClass]="{'bolder': email.default}">{{ email.phone }} {{
+            email?.label }}</div>
+        </td>
+      </tr>
+    </table>
+  </mat-card-content>
+  <mat-card-actions></mat-card-actions>
+</mat-card>
