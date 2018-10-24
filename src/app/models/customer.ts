@@ -6,15 +6,14 @@ export interface Customer {
   place?: string;
   postalCode?: string;
   phones?: [
-    { phone: string;
+    { number: string;
       label?: string;
-      default?: boolean
     }
   ];
   emails?: [
     { email: string;
       label?: string;
-      default?: boolean
+      primary?: boolean
     }
   ];
 }

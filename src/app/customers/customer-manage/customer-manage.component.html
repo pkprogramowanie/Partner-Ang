@@ -39,29 +39,65 @@
           </mat-form-field>
         </div>
       </div>
-      <div id="phone-section" >
-        Telefony 
-        <button mat-icon-button type="button">
-          <mat-icon aria-label="Dodaj" (click)="addPhone()">add</mat-icon>
-        </button>
-        <div formArrayName="phones">
-            <div *ngFor="let phone of formData.get('phones')['controlls']; let i=index;">
-                <div [formGroupName]="i">
+      <div id="phone-section">
+        Telefony
+            <button mat-icon-button type="button">
+                <mat-icon aria-label="Dodaj" (click)="addPhone()">add</mat-icon>
+              </button>
+        <div formArrayName="phones"  style="width: 100%">
+          <div *ngFor="let phone of formData.get('phones')['controls']; let i=index;">
+
+            <div [formGroupName]="i">
+              <table>
+                <tr>
+                  <td>
                     <mat-form-field>
-                      <input matInput placeholder="Telefon" formControlName="phone" />
+                      <input matInput placeholder="Telefon" formControlName="number" />
                     </mat-form-field>
-        
+                  </td>
+                  <td>
                     <mat-form-field>
                       <input matInput placeholder="Etykieta" formControlName="label" />
                     </mat-form-field>
+                  </td>
+                </tr>
+              </table>
 
-                    <mat-form-field>
-                        <input matInput placeholder="Domyślny" formControlName="default" />
-                      </mat-form-field>
-                </div>
             </div>
+          </div>
         </div>
       </div>
+
+      <div id="emails-section">
+          Adresy email
+              <button mat-icon-button type="button">
+                  <mat-icon aria-label="Dodaj" (click)="addEmail()">add</mat-icon>
+                </button>
+          <div formArrayName="emails"  style="width: 100%">
+            <div *ngFor="let email of formData.get('emails')['controls']; let i=index;">
+              <div [formGroupName]="i">
+                <table>
+                  <tr>
+                    <td>
+                      <mat-form-field>
+                        <input matInput placeholder="Adres email" formControlName="email" />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field>
+                        <input matInput placeholder="Etykieta" formControlName="label" />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                            <mat-checkbox formControlName="primary">Zawsze wysyłaj</mat-checkbox>
+                      </td>                    
+                  </tr>
+                </table>
+  
+              </div>
+            </div>
+          </div>
+        </div>
 
       <mat-card-actions>
         <button mat-button type="submit" id="btn-submit">{{ buttonContent }}</button>
