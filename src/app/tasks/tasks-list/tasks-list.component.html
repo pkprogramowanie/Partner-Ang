@@ -1,3 +1,13 @@
-<p>
-  tasks-list works!
-</p>
+<mat-toolbar>
+    <mat-toolbar-row>
+      <span>
+        <mat-form-field>
+          <input matInput type="text" name="filter" [(ngModel)]="filter" placeholder="Szukaj" (keyup)='onFilter()'>
+        </mat-form-field>
+      </span>
+      <span class="example-spacer"></span>
+      <button mat-button (click)="onAddClick()">
+        <mat-icon class="example-icon">add</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>

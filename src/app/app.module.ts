@@ -14,7 +14,8 @@ import { AppRoutingModule, appRoutes } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatButtonModule, MatCheckboxModule, MatInputModule, MatCardModule, MatDialogModule} from '@angular/material';
+import {MatButtonModule, MatCheckboxModule, MatInputModule, MatCardModule, MatDialogModule, MatNativeDateModule, MAT_DATE_LOCALE} from '@angular/material';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatTableModule} from '@angular/material/table';
@@ -23,6 +24,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { CustomerDetailComponent } from './customers/customer-detail/customer-detail.component';
 import { TasksListComponent } from './tasks/tasks-list/tasks-list.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { TaskManageComponent } from './tasks/task-manage/task-manage.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
     CustomerListComponent,
     CustomerDetailComponent,
     TasksListComponent,
+    TaskManageComponent,
 
   ],
   imports: [
@@ -45,16 +48,20 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
     BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
     MatGridListModule,
+    MatNativeDateModule,
     MatTableModule,
     MatToolbarModule,
     MatIconModule
   ],
-  providers: [],
+  providers: [
+    {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},
+  ],
   bootstrap: [AppComponent],
   entryComponents: [ ConfirmDialogComponent ]
 })

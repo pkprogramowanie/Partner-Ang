@@ -50,7 +50,7 @@ export class CustomerListComponent implements OnInit {
   }
 
   onAddClick() {
-    this.router.navigate(['/Nowy']);
+    this.router.navigate(['/NowyKlient']);
   }
 
   onSelectRow(row) {

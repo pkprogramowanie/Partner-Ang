@@ -1,0 +1,50 @@
+<mat-card>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="formData" (ngSubmit)="onSubmit()" >
+        <div>
+          <mat-form-field>
+            <input matInput placeholder="Tytuł" formControlName="title" />
+          </mat-form-field>
+          <div *ngIf="formData.controls.title.errors?.required && (formData.controls.title.dirty || formData.controls.title.touched)">
+              Tytuł wymagany.
+          </div>
+        </div>
+          <mat-form-field>
+            <textarea matInput placeholder="Opis" formControlName="description" ></textarea>
+          </mat-form-field>
+
+        <div>
+          <div class="inline">
+            <div class="half margin-right-10">
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Przewidywana data zakończenia" formControlName="proposedEndDate" class="half ">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="half">
+              <mat-form-field>
+                <input matInput placeholder="Status" formControlName="status" class="half " />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <mat-form-field>
+            <input matInput placeholder="Komentarze" formControlName="coments" />
+          </mat-form-field>
+        <div id="customers-section">
+          Elementy
+              <button mat-icon-button type="button">
+                  <mat-icon aria-label="Dodaj" (click)="addElements()">add</mat-icon>
+                </button>
+        </div>
+  
+        <mat-card-actions>
+          <button mat-raised-button type="submit" id="btn-submit">{{ buttonContent }}</button>
+        </mat-card-actions>
+      </form>
+    </mat-card-content>
+  
+  
+  </mat-card>

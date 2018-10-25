@@ -6,9 +6,10 @@ import { CustomerManageComponent } from './customers/customer-manage/customer-ma
 import { CustomerListComponent } from './customers/customer-list/customer-list.component';
 import { CustomerDetailComponent } from './customers/customer-detail/customer-detail.component';
 import { TasksListComponent } from './tasks/tasks-list/tasks-list.component';
+import { TaskManageComponent } from './tasks/task-manage/task-manage.component';
 
 export const appRoutes: Routes = [
-  { path: 'Nowy',
+  { path: 'NowyKlient',
     component: CustomerManageComponent
   },
   { path: 'Klienci',
@@ -20,9 +21,12 @@ export const appRoutes: Routes = [
   { path: 'Klient/poprawa/:id',
   component: CustomerManageComponent
   },
+  { path: 'NoweZlecenie',
+  component: TaskManageComponent
+  },
   { path: 'Zlecenia',
   component: TasksListComponent
-},
+  },
 ];
 
 
