@@ -1,5 +1,5 @@
 <mat-card>
-  <mat-card-title >Klient: {{ customer?.ID }}<span class="right"><mat-icon (click)="onClickEdit()">edit</mat-icon><mat-icon (click)="onClickDelete()">delete</mat-icon></span></mat-card-title>
+  <mat-card-title ><span class="left"><mat-icon (click)="onBack()">arrow_back</mat-icon></span>Klient: {{ customer?.ID }}<span class="right"><mat-icon (click)="onClickEdit()">edit</mat-icon><mat-icon (click)="onClickDelete()">delete</mat-icon></span></mat-card-title>
   <mat-card-content>
     <table>
       <tr>

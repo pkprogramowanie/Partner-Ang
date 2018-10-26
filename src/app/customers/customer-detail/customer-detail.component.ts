@@ -53,4 +53,8 @@ export class CustomerDetailComponent implements OnInit {
   onClickDelete() {
     this.openDialogConfirmDelete();
   }
+
+  onBack() {
+    this.router.navigate(['/Klienci']);
+  }
 }

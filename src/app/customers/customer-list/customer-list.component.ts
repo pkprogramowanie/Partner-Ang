@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Customer } from '../../models/customer';
 import { Router } from '@angular/router';
 import { CustomersService } from '../../services/customers.service';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -13,28 +13,43 @@ import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-d
 })
 export class CustomerListComponent implements OnInit {
 
-  public customers: any[];
-
-  displayedColumns: string[] = ['ID', 'name', 'adress', 'place', 'actions'];
+  customersToDatatable: MatTableDataSource<any>;
+  displayedColumns: string[] = ['ID', 'name', 'adres', 'place', 'phones', 'actions'];
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   filter = '';
-  order = '';
 
   constructor(private db: CustomersService, private router: Router, private dialog: MatDialog) { }
 
   ngOnInit() {
-    // this.serviceDb.path = '/apteki';
-    // this.order = 'name';
     this.getCustomers();
   }
 
-  getCustomers(order: string = this.order, filter: string = this.filter) {
+  getCustomers() {
     this.db.list().subscribe(list => {
-      this.customers = list.map(item => {
+      const customers = list.map(item => {
         return {
           $key: item.payload.doc.id,
-          customer: item.payload.doc.data()
+          ID: item.payload.doc.data()['ID'],
+          name: item.payload.doc.data()['name'],
+          street: item.payload.doc.data()['street'],
+          streetNumber: item.payload.doc.data()['streetNumber'],
+          place: item.payload.doc.data()['place'],
+          phones: item.payload.doc.data()['phones'],
+          emails: item.payload.doc.data()['emails'],
         };
       });
+      this.customersToDatatable = new MatTableDataSource(customers);
+      this.customersToDatatable.sort = this.sort;
+      this.customersToDatatable.paginator = this.paginator;
+      this.customersToDatatable.filterPredicate = (data, filter) => {
+        return (data.name.toLowerCase().indexOf(filter) !== -1 ||
+                data.ID.toLowerCase().indexOf(filter) !== -1 ||
+                data.street.toLowerCase().indexOf(filter) !== -1 ||
+                data.place.toLowerCase().indexOf(filter) !== -1
+                );
+      };
+      // console.log(this.customersToDatatable);
     });
   }
 
@@ -58,4 +73,11 @@ export class CustomerListComponent implements OnInit {
     this.router.navigate(['/Klient/' + row.$key]);
   }
 
+  onSearchClear() {
+    this.filter = '';
+  }
+
+  applyFilter () {
+    this.customersToDatatable.filter = this.filter.trim().toLowerCase();
+  }
 }
