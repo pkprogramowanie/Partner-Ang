@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CustomersService } from '../../services/customers.service';
 import { MatDialogConfig, MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-customer-list',
@@ -19,7 +20,7 @@ export class CustomerListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   filter = '';
 
-  constructor(private db: CustomersService, private router: Router, private dialog: MatDialog) { }
+  constructor(private db: CustomersService, private router: Router, private dialog: DialogService) { }
 
   ngOnInit() {
     this.getCustomers();
@@ -53,16 +54,16 @@ export class CustomerListComponent implements OnInit {
     });
   }
 
-  openDialog() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      title: 'Potwierdzenie',
-      description: 'Czy jesteś pewien że chcesz usunąć?',
-    };
-    this.dialog.open(ConfirmDialogComponent, dialogConfig);
-  }
+  // openDialog() {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.autoFocus = true;
+  //   dialogConfig.data = {
+  //     title: 'Potwierdzenie',
+  //     description: 'Czy jesteś pewien że chcesz usunąć?',
+  //   };
+  //   this.dialog.open(ConfirmDialogComponent, dialogConfig);
+  // }
 
   onAddClick() {
     this.router.navigate(['/NowyKlient']);
