@@ -14,7 +14,7 @@ import { AppRoutingModule, appRoutes } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatButtonModule, MatCheckboxModule, MatInputModule, MatCardModule, MatDialogModule, MatNativeDateModule, MAT_DATE_LOCALE, MatPaginatorModule, MatSortModule} from '@angular/material';
+import {MatButtonModule, MatCheckboxModule, MatInputModule, MatCardModule, MatDialogModule, MatNativeDateModule, MAT_DATE_LOCALE, MatPaginatorModule, MatSortModule, MatSnackBarModule} from '@angular/material';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';
@@ -25,6 +25,7 @@ import { CustomerDetailComponent } from './customers/customer-detail/customer-de
 import { TasksListComponent } from './tasks/tasks-list/tasks-list.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { TaskManageComponent } from './tasks/task-manage/task-manage.component';
+import { MaterialModule } from './material/material.module';
 
 @NgModule({
   declarations: [
@@ -46,20 +47,7 @@ import { TaskManageComponent } from './tasks/task-manage/task-manage.component';
     ReactiveFormsModule,
     FormsModule,
     BrowserAnimationsModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatGridListModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
-    MatToolbarModule,
-    MatIconModule
+    MaterialModule
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},

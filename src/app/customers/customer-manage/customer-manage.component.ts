@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 
 import { Customer } from '../../models/customer';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CustomersService } from '../../services/customers.service';
 import { Mode } from 'src/app/models/Enums/formMode';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { NotificationService } from 'src/app/services/notification.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-customer-manage',
@@ -14,7 +15,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 })
 export class CustomerManageComponent implements OnInit {
 
-  formData = new FormGroup({
+  formData: FormGroup = new FormGroup({
     ID: new FormControl('', Validators.required),
     name: new FormControl(''),
     street: new FormControl(''),
@@ -33,9 +34,11 @@ export class CustomerManageComponent implements OnInit {
   constructor(private db: CustomersService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialog: MatDialog,
-    public dialogRef: MatDialogRef<CustomerManageComponent>
+    public dialogRef: MatDialogRef<CustomerManageComponent>,
+    private notificationSercice: NotificationService,
+    @Inject(MAT_DIALOG_DATA) data
   ) {
+    this.id = data ? data.$key : null;
   }
 
   onSubmit() {
@@ -62,14 +65,15 @@ export class CustomerManageComponent implements OnInit {
       // console.log('newcustomer' , newCustomer);
       if (this.mode === Mode.Edit) {
         this.db.update(this.id, newCustomer);
+        this.notificationSercice.success('Poprawiono');
       } else {
         this.db.add(newCustomer);
+        this.notificationSercice.success('Dodano');
       }
       this.formData.reset();
       this.dialogRef.close();
-      this.router.navigate(['/Klienci']);
+      // this.router.navigate(['/Klienci']);
     }
-
   }
 
   addPhone() {
@@ -85,8 +89,13 @@ export class CustomerManageComponent implements OnInit {
     }));
   }
 
+  onClose() {
+    this.dialogRef.close();
+  }
+
   ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('id');
+
+    // this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.mode = Mode.Edit;
     }

@@ -1,14 +1,15 @@
   <mat-icon class="to-right action-icon" (click)="onClose()">close</mat-icon>
-  <mat-card-title>{{ title }}</mat-card-title>
-  <mat-card-content>
+  <h1 mat-dialog-title>{{ title }}</h1>
+
     <form [formGroup]="formData" (ngSubmit)="onSubmit()" >
+        <mat-dialog-content>      
       <div>
         <mat-form-field>
-          <input matInput placeholder="Kod klienta" formControlName="ID" />
+          <input matInput placeholder="Kod klienta*" formControlName="ID" />
         </mat-form-field>
-        <div *ngIf="formData.controls.ID.errors?.required && (formData.controls.ID.dirty || formData.controls.ID.touched)">
+        <mat-error *ngIf="formData.controls.ID.errors?.required && (formData.controls.ID.dirty || formData.controls.ID.touched)">
             Kod wymagany.
-          </div>
+          </mat-error>
       </div>
       <div>
 
@@ -101,9 +102,8 @@
             </div>
           </div>
         </div>
-
+      </mat-dialog-content>
       <mat-card-actions>
-        <button mat-raised-button type="submit" id="btn-submit">{{ buttonContent }}</button>
+        <button mat-raised-button type="submit" id="btn-submit" [disabled]="formData.invalid" color="primary">{{ buttonContent }}</button>
       </mat-card-actions>
     </form>
-  </mat-card-content>

@@ -1,7 +1,12 @@
 <mat-card>
-  <mat-card-title ><span class="left"><mat-icon (click)="onBack()">arrow_back</mat-icon></span>Klient: {{ customer?.ID }}<span class="right"><mat-icon (click)="onClickEdit()">edit</mat-icon><mat-icon (click)="onDelete()">delete</mat-icon></span></mat-card-title>
+  <mat-card-title><span class="left">
+      <mat-icon (click)="onBack()">arrow_back</mat-icon>
+    </span>Klient: {{ customer?.ID }}<span class="right">
+      <mat-icon (click)="onEdit()">edit</mat-icon>
+      <mat-icon (click)="onDelete()">delete</mat-icon>
+    </span></mat-card-title>
   <mat-card-content>
-    <table>
+    <table class="mat-elevation-z2">
       <tr>
         <td>Nazwa</td>
         <td>{{ customer?.name }}</td>
@@ -13,14 +18,14 @@
       <tr>
         <td>Telefon</td>
         <td>
-          <div *ngFor="let phone of customer?.phones" [ngClass]="{'bolder': phone.default}">{{ phone.phone }} {{
+          <div *ngFor="let phone of customer?.phones" [ngClass]="{'bolder': phone.primary}">{{ phone.number }} {{
             phone?.label }}</div>
         </td>
       </tr>
       <tr>
         <td>Email</td>
         <td>
-          <div *ngFor="let email of customer?.emails" [ngClass]="{'bolder': email.default}">{{ email.phone }} {{
+          <div *ngFor="let email of customer?.emails" [ngClass]="{'bolder': email.primary}">{{ email.email }} {{
             email?.label }}</div>
         </td>
       </tr>

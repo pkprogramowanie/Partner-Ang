@@ -10,7 +10,6 @@ import { CustomerManageComponent } from '../customer-manage/customer-manage.comp
   styleUrls: ['./customer-list.component.scss']
 })
 export class CustomerListComponent implements OnInit {
-
   customersToDatatable: MatTableDataSource<any>;
   displayedColumns: string[] = ['ID', 'name', 'adres', 'place', 'phones', 'actions'];
   @ViewChild(MatSort) sort: MatSort;
@@ -20,7 +19,7 @@ export class CustomerListComponent implements OnInit {
   constructor(private db: CustomersService,
     private router: Router,
     private dialog: MatDialog,
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.getCustomers();
@@ -44,35 +43,23 @@ export class CustomerListComponent implements OnInit {
       this.customersToDatatable.sort = this.sort;
       this.customersToDatatable.paginator = this.paginator;
       this.customersToDatatable.filterPredicate = (data, filter) => {
-        return (data.name.toLowerCase().indexOf(filter) !== -1 ||
-          data.ID.toLowerCase().indexOf(filter) !== -1 ||
-          data.street.toLowerCase().indexOf(filter) !== -1 ||
-          data.place.toLowerCase().indexOf(filter) !== -1
+        return (data.ID.toLowerCase().indexOf(filter) !== -1 ||
+          (data.name !== null && data.name !== undefined && data.name.toLowerCase().indexOf(filter) !== -1) ||
+          (data.street !== null && data.street !== undefined && data.street.toLowerCase().indexOf(filter) !== -1) ||
+          (data.place !== null && data.place !== undefined && data.place.toLowerCase().indexOf(filter) !== -1)
+
+          //   data.street.toLowerCase().indexOf(filter) !== -1 ||
+          //   data.place.toLowerCase().indexOf(filter) !== -1
         );
       };
-      // console.log(this.customersToDatatable);
     });
   }
 
-  // openDialog() {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.autoFocus = true;
-  //   dialogConfig.data = {
-  //     title: 'Potwierdzenie',
-  //     description: 'Czy jesteś pewien że chcesz usunąć?',
-  //   };
-  //   this.dialog.open(ConfirmDialogComponent, dialogConfig);
-  // }
-
   onCreate() {
-    // this.router.navigate(['/NowyKlient']);
-
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
     this.dialog.open(CustomerManageComponent, dialogConfig);
-
   }
 
   onSelectDetail(row) {

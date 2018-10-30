@@ -1,9 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
 html, body { height: 100%; }
 body { margin: 0; font-family: 'Roboto', sans-serif; }
 
-/* @import "~@angular/material/prebuilt-themes/indigo-pink.css"; */
+
 .hide{
     display: none;
 }
@@ -21,3 +21,14 @@ mat-footer-row mat-footer-cell{
     font-style: italic;
 }
 
+.notification{
+    text-align: center;
+}
+
+.success {
+    background-color: green;
+}
+
+.bolder {
+    font-weight: bold;
+}
