@@ -5,7 +5,7 @@ import { Customer } from '../../models/customer';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CustomersService } from '../../services/customers.service';
 import { Mode } from 'src/app/models/Enums/formMode';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-customer-manage',
@@ -30,55 +30,66 @@ export class CustomerManageComponent implements OnInit {
   title: string;
   buttonContent: string;
 
-  constructor(private db: CustomersService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(private db: CustomersService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    public dialogRef: MatDialogRef<CustomerManageComponent>
+  ) {
   }
 
   onSubmit() {
-    console.log(this.formData);
+    // console.log(this.formData);
 
-    const validPhones = this.formData.controls.phones.value.filter( function(el) {
+    const validPhones = this.formData.controls.phones.value.filter(function (el) {
       return el.number != null;
     });
-    const validEmails = this.formData.controls.email.value.filter( function(el) {
+    const validEmails = this.formData.controls.emails.value.filter(function (el) {
       return el.email != null;
     });
-    const newCustomer: Customer = {
-      ID: this.formData.controls.ID.value,
-      name: this.formData.controls.name.value,
-      street: this.formData.controls.street.value,
-      streetNumber: this.formData.controls.streetNumber.value,
-      place: this.formData.controls.place.value,
-      postalCode: this.formData.controls.postalCode.value,
-      phones: validPhones.map( p => ({ number: p.number, label: p.label }) ),
-      emails: validEmails.map( e => ({ email: e.email, label: e.label, primary: e.primary }) )
-    };
+    if (this.formData.valid) {
+      const newCustomer: Customer = {
+        ID: this.formData.controls.ID.value,
+        name: this.formData.controls.name.value,
+        street: this.formData.controls.street.value,
+        streetNumber: this.formData.controls.streetNumber.value,
+        place: this.formData.controls.place.value,
+        postalCode: this.formData.controls.postalCode.value,
+        phones: validPhones.map(p => ({ number: p.number, label: p.label })),
+        emails: validEmails.map(e => ({ email: e.email, label: e.label, primary: e.primary }))
+      };
 
-    console.log('customer to save', newCustomer);
-
-    if (this.mode === Mode.Edit) {
-      this.db.update(this.id, newCustomer);
-    } else {
-      this.db.add(newCustomer);
+      // console.log('newcustomer' , newCustomer);
+      if (this.mode === Mode.Edit) {
+        this.db.update(this.id, newCustomer);
+      } else {
+        this.db.add(newCustomer);
+      }
+      this.formData.reset();
+      this.dialogRef.close();
+      this.router.navigate(['/Klienci']);
     }
-    this.router.navigate(['/Klienci']);
+
   }
 
   addPhone() {
     const arr = <FormArray>this.formData.get('phones');
-    arr.push(new FormGroup({ number: new FormControl(null), label: new FormControl(null) } ));
+    arr.push(new FormGroup({ number: new FormControl(null), label: new FormControl(null) }));
   }
 
   addEmail() {
     const arr = <FormArray>this.formData.get('emails');
-    arr.push(new FormGroup({ email: new FormControl(null, Validators.email),
-                             label: new FormControl(null), primary: new FormControl(null) } ));
+    arr.push(new FormGroup({
+      email: new FormControl(null, Validators.email),
+      label: new FormControl(null), primary: new FormControl(null)
+    }));
   }
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.mode = Mode.Edit;
-     }
+    }
     if (this.mode === Mode.Edit) {
       this.title = 'Popraw klienta';
       this.buttonContent = 'Zapisz';
@@ -94,7 +105,7 @@ export class CustomerManageComponent implements OnInit {
         const phonesFromData = data.get('phones');
         if (phonesFromData != null) {
           phonesFromData.forEach(p => {
-            phones.push(new FormGroup({ number: new FormControl(p.number), label: new FormControl(p.label) } ));
+            phones.push(new FormGroup({ number: new FormControl(p.number), label: new FormControl(p.label) }));
           });
         }
         const emails = <FormArray>this.formData.get('emails');
@@ -102,8 +113,8 @@ export class CustomerManageComponent implements OnInit {
         if (emailsFromData != null) {
           emailsFromData.forEach(e => {
             emails.push(
-              new FormGroup({ email: new FormControl(e.email), label: new FormControl(e.label), primary: new FormControl(e.primary) }  )
-              );
+              new FormGroup({ email: new FormControl(e.email), label: new FormControl(e.label), primary: new FormControl(e.primary) })
+            );
           });
         }
       });

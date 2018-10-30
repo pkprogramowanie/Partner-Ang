@@ -1,11 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Customer } from '../../models/customer';
 import { Router } from '@angular/router';
 import { CustomersService } from '../../services/customers.service';
 import { MatDialogConfig, MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
-import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
-import { DialogService } from 'src/app/services/dialog.service';
+import { CustomerManageComponent } from '../customer-manage/customer-manage.component';
 
 @Component({
   selector: 'app-customer-list',
@@ -20,7 +17,10 @@ export class CustomerListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   filter = '';
 
-  constructor(private db: CustomersService, private router: Router, private dialog: DialogService) { }
+  constructor(private db: CustomersService,
+    private router: Router,
+    private dialog: MatDialog,
+    ) { }
 
   ngOnInit() {
     this.getCustomers();
@@ -45,10 +45,10 @@ export class CustomerListComponent implements OnInit {
       this.customersToDatatable.paginator = this.paginator;
       this.customersToDatatable.filterPredicate = (data, filter) => {
         return (data.name.toLowerCase().indexOf(filter) !== -1 ||
-                data.ID.toLowerCase().indexOf(filter) !== -1 ||
-                data.street.toLowerCase().indexOf(filter) !== -1 ||
-                data.place.toLowerCase().indexOf(filter) !== -1
-                );
+          data.ID.toLowerCase().indexOf(filter) !== -1 ||
+          data.street.toLowerCase().indexOf(filter) !== -1 ||
+          data.place.toLowerCase().indexOf(filter) !== -1
+        );
       };
       // console.log(this.customersToDatatable);
     });
@@ -65,12 +65,17 @@ export class CustomerListComponent implements OnInit {
   //   this.dialog.open(ConfirmDialogComponent, dialogConfig);
   // }
 
-  onAddClick() {
-    this.router.navigate(['/NowyKlient']);
+  onCreate() {
+    // this.router.navigate(['/NowyKlient']);
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    this.dialog.open(CustomerManageComponent, dialogConfig);
+
   }
 
-  onSelectRow(row) {
-    console.log('row', row);
+  onSelectDetail(row) {
     this.router.navigate(['/Klient/' + row.$key]);
   }
 
@@ -78,7 +83,7 @@ export class CustomerListComponent implements OnInit {
     this.filter = '';
   }
 
-  applyFilter () {
+  applyFilter() {
     this.customersToDatatable.filter = this.filter.trim().toLowerCase();
   }
 }

@@ -65,6 +65,6 @@ import { TaskManageComponent } from './tasks/task-manage/task-manage.component';
     {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ ConfirmDialogComponent ]
+  entryComponents: [ ConfirmDialogComponent, CustomerManageComponent ]
 })
 export class AppModule { }

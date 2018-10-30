@@ -8,6 +8,14 @@ body { margin: 0; font-family: 'Roboto', sans-serif; }
     display: none;
 }
 
+.to-right {
+    float: right;
+}
+
+.action-icon {
+    cursor: pointer;
+}
+
 mat-footer-row mat-footer-cell{
     justify-content: center;
     font-style: italic;

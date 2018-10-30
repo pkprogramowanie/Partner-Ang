@@ -9,7 +9,7 @@
       </mat-form-field>
     </span>
     <span class="example-spacer"></span>
-    <button mat-button (click)="onAddClick()">
+    <button mat-button (click)="onCreate()">
       <mat-icon class="example-icon">add</mat-icon>
     </button>
   </mat-toolbar-row>
@@ -46,7 +46,7 @@
     <td mat-cell *matCellDef="let row">
       <mat-icon>email</mat-icon>
       <mat-icon>work</mat-icon>
-      <mat-icon (click)="onSelectRow(row)">details</mat-icon>      
+      <mat-icon (click)="onSelectDetail(row)" class="action-icon">details</mat-icon>      
     </td>
   </ng-container>
   <ng-container matColumnDef="loading">
