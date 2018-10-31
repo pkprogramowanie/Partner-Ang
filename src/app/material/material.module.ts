@@ -5,8 +5,10 @@ import * as Material from '@angular/material';
 @NgModule({
   imports: [
     CommonModule,
+    Material.MatAutocompleteModule,
     Material.MatButtonModule,
     Material.MatCheckboxModule,
+    Material.MatChipsModule,
     Material.MatDatepickerModule,
     Material.MatDialogModule,
     Material.MatFormFieldModule,
@@ -22,8 +24,10 @@ import * as Material from '@angular/material';
     Material.MatIconModule,
   ],
   exports: [
+    Material.MatAutocompleteModule,
     Material.MatButtonModule,
     Material.MatCheckboxModule,
+    Material.MatChipsModule,
     Material.MatDatepickerModule,
     Material.MatDialogModule,
     Material.MatFormFieldModule,
