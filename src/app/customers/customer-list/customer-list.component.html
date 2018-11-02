@@ -8,6 +8,13 @@
         </button>
       </mat-form-field>
     </span>
+    <form>
+    <mat-form-field>
+      <mat-select placeholder="Tagi" [formControl]="tagFilter" multiple>
+        <mat-option *ngFor="let tag of tagList" [value]="tag">{{tag}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
     <span class="example-spacer"></span>
     <button mat-button (click)="onCreate()">
       <mat-icon class="example-icon">add</mat-icon>

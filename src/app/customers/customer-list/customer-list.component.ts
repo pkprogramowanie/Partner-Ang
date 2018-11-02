@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { CustomersService } from '../../services/customers.service';
 import { MatDialogConfig, MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { CustomerManageComponent } from '../customer-manage/customer-manage.component';
+import { FormControl } from '@angular/forms';
+import { CustomerTagsService } from 'src/app/services/customer-tags.service';
 
 @Component({
   selector: 'app-customer-list',
@@ -16,13 +18,30 @@ export class CustomerListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   filter = '';
 
+  tagFilter = new FormControl();
+  tagList: string[] = [];
+
   constructor(private db: CustomersService,
     private router: Router,
     private dialog: MatDialog,
+    private customerTagService: CustomerTagsService
   ) { }
 
   ngOnInit() {
     this.getCustomers();
+    this.customerTagService.list().subscribe(list => {
+      this.tagList = list.map(el => el.payload.doc.data().tag);
+    });
+    this.tagFilter.valueChanges.subscribe(ft => {
+      this.customersToDatatable.filteredData = this.customersToDatatable.filteredData.filter(x => {
+        console.log(x);
+        if (x.tags) {
+          return x.tags.indexOf(this.tagList[0]) !== -1;
+        }
+      });
+      console.log(ft);
+      console.log('filteredData', this.customersToDatatable.filteredData);
+    });
   }
 
   getCustomers() {
@@ -37,20 +56,23 @@ export class CustomerListComponent implements OnInit {
           place: item.payload.doc.data()['place'],
           phones: item.payload.doc.data()['phones'],
           emails: item.payload.doc.data()['emails'],
+          tags: item.payload.doc.data()['tags']
         };
       });
       this.customersToDatatable = new MatTableDataSource(customers);
       this.customersToDatatable.sort = this.sort;
       this.customersToDatatable.paginator = this.paginator;
       this.customersToDatatable.filterPredicate = (data, filter) => {
-        return (data.ID.toLowerCase().indexOf(filter) !== -1 ||
+        const result = (data.ID.toLowerCase().indexOf(filter) !== -1 ||
           (data.name !== null && data.name !== undefined && data.name.toLowerCase().indexOf(filter) !== -1) ||
           (data.street !== null && data.street !== undefined && data.street.toLowerCase().indexOf(filter) !== -1) ||
-          (data.place !== null && data.place !== undefined && data.place.toLowerCase().indexOf(filter) !== -1)
+          (data.place !== null && data.place !== undefined && data.place.toLowerCase().indexOf(filter) !== -1));
 
-          //   data.street.toLowerCase().indexOf(filter) !== -1 ||
-          //   data.place.toLowerCase().indexOf(filter) !== -1
-        );
+        if (this.tagFilter) {
+          console.log('tagfilter ', this.tagFilter);
+        }
+        return result;
+
       };
     });
   }

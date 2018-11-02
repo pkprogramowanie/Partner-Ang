@@ -29,6 +29,12 @@
             email?.label }}</div>
         </td>
       </tr>
+      <tr>
+        <td>Tagi</td>
+        <td>
+          <p *ngFor="let tag of customer?.tags">{{ tag }}</p> 
+        </td>
+      </tr>      
     </table>
   </mat-card-content>
   <mat-card-actions></mat-card-actions>
