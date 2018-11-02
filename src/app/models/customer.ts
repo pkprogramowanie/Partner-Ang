@@ -18,9 +18,5 @@ export interface Customer {
       primary?: boolean
     }
   ];
-  tags?: [
-    {
-      tag: string
-    }
-  ];
+  tags?: string[];
 }

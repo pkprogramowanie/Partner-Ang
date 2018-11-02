@@ -41,12 +41,12 @@ export class CustomerManageComponent implements OnInit {
   removable = true;
   addOnBlur = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  fruitCtrl = new FormControl();
-  filteredFruits: Observable<string[]>;
-  fruits: string[] = ['Lemon'];
-  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  // fruitCtrl = new FormControl();
+  filteredTags: Observable<string[]>;
+  tags?: string[] = [];
+  allTags: string[] = [];
 
-  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   //
 
@@ -59,13 +59,18 @@ export class CustomerManageComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data) {
     this.id = data ? data.$key : null;
 
-    // chips
-    this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-      startWith(null),
-      map((fruit: string | null) => fruit ? this._filter(fruit) : this.allFruits.slice()));
+
   }
 
   ngOnInit() {
+    // chips
+    this.tagService.list().subscribe(list => {
+      this.allTags = list.map(el => el.payload.doc.data().tag );
+    });
+    this.filteredTags = this.formData.controls.tags.valueChanges.pipe(
+      startWith(null),
+      map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
+
     if (this.id) {
       this.mode = Mode.Edit;
     }
@@ -96,16 +101,7 @@ export class CustomerManageComponent implements OnInit {
             );
           });
         }
-        const tags = <FormArray>this.formData.get('tags');
-        const tagsFromData = data.get('tags');
-        if (tagsFromData != null) {
-          tagsFromData.forEach(e => {
-            tags.push(
-              new FormGroup({ tag: new FormControl(e.tag) })
-            );
-          });
-        }
-
+        this.tags = data.get('tags');
       });
     } else {
       this.title = 'Dodaj klienta';
@@ -116,16 +112,13 @@ export class CustomerManageComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.formData);
+    console.log(this.formData, this.tags);
 
     const validPhones = this.formData.controls.phones.value.filter(function (el) {
       return el.number != null;
     });
     const validEmails = this.formData.controls.emails.value.filter(function (el) {
       return el.email != null;
-    });
-    const validTags = this.formData.controls.tags.value.filter(function (el) {
-      return el.tag != null;
     });
     if (this.formData.valid) {
       const newCustomer: Customer = {
@@ -137,10 +130,12 @@ export class CustomerManageComponent implements OnInit {
         postalCode: this.formData.controls.postalCode.value,
         phones: validPhones.map(p => ({ number: p.number, label: p.label })),
         emails: validEmails.map(e => ({ email: e.email, label: e.label, primary: e.primary })),
-        tags: validTags.map(t => ({ tag: t.tag }))
+        tags: this.tags
       };
 
-      // console.log('newcustomer' , newCustomer);
+      console.log('tags' , this.tags);
+      this.tagService.updateTags(this.tags);
+
       if (this.mode === Mode.Edit) {
         this.db.update(this.id, newCustomer);
         this.notificationSercice.success('Poprawiono');
@@ -184,7 +179,7 @@ export class CustomerManageComponent implements OnInit {
 
       // Add our fruit
       if ((value || '').trim()) {
-        this.fruits.push(value.trim());
+        this.tags.push(value.trim());
       }
 
       // Reset the input value
@@ -192,28 +187,28 @@ export class CustomerManageComponent implements OnInit {
         input.value = '';
       }
 
-      this.fruitCtrl.setValue(null);
+      this.formData.controls.tags.setValue(null);
     }
   }
 
   remove(fruit: string): void {
-    const index = this.fruits.indexOf(fruit);
+    const index = this.tags.indexOf(fruit);
 
     if (index >= 0) {
-      this.fruits.splice(index, 1);
+      this.tags.splice(index, 1);
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.fruits.push(event.option.viewValue);
-    this.fruitInput.nativeElement.value = '';
-    this.fruitCtrl.setValue(null);
+    this.tags.push(event.option.viewValue);
+    this.tagInput.nativeElement.value = '';
+    this.formData.controls.tags.setValue(null);
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.allFruits.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
+    return this.allTags.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
   }
 
 }

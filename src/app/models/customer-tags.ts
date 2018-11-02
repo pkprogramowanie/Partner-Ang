@@ -1,3 +1,3 @@
-export interface CustomerTags {
+export interface CustomerTag {
     tag: string;
 }

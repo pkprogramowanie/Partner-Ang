@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
-import { CustomerTags } from '../models/customer-tags';
+import { CustomerTag } from '../models/customer-tags';
 
 @Injectable({
   providedIn: 'root'
@@ -13,18 +13,17 @@ export class CustomerTagsService {
   public listRef: AngularFirestoreCollection;
 
   constructor(private db: AngularFirestore) {
-    this.listRef = this.db.collection<CustomerTags>(this.path);
+    this.listRef = this.db.collection<CustomerTag>(this.path);
     this.list();
-   }
-
-  add(customer: CustomerTags) {
-    this.listRef.add(customer);
   }
 
-  list(order: string = '', filter: string = ''): Observable<any[]> {
+  add(tag: CustomerTag) {
+    this.listRef.add(tag);
+  }
+
+  list(): Observable<any[]> {
     this.customersTags$ = this.db.collection(this.path).snapshotChanges();
     return this.customersTags$;
-    // this.db.list(this.path, ref => ref.orderByChild(order).startAt(filter)).snapshotChanges();
   }
 
   get(id: string) {
@@ -35,8 +34,23 @@ export class CustomerTagsService {
     this.db.collection(this.path).doc(id).delete();
   }
 
-  update(id: string, customer: CustomerTags) {
+  update(id: string, customer: CustomerTag) {
     this.db.collection(this.path).doc(id).update(customer);
   }
 
+  updateTags(tags: string[]) {
+    this.listRef.snapshotChanges().subscribe(
+      x => {
+        if (tags) {
+          tags.forEach(el => {
+            if (x.find(d => d.payload.doc.data().tag === el) === undefined) {
+              this.add( {
+                tag: el
+              });
+            }
+          });
+        }
+      }
+    );
+  }
 }
