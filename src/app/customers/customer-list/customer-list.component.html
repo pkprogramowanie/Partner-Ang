@@ -2,7 +2,7 @@
   <mat-toolbar-row>
     <span>
       <mat-form-field floatLabel="never" >
-        <input matInput type="text" name="filter" [(ngModel)]="filter" placeholder="Szukaj" autocomplete="off" (keyup)="applyFilter()">
+        <input matInput type="text" name="filter" [(ngModel)]="filter" placeholder="Szukaj" autocomplete="off" (keyup)="applyFilter($event.target.value)">
         <button mat-button natSuffix mat-icon-button aria-label="Clear" *ngIf="filter" (click)="onSearchClear()">
           <mat-icon>close</mat-icon>
         </button>

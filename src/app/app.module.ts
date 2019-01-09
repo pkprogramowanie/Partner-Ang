@@ -14,7 +14,8 @@ import { AppRoutingModule, appRoutes } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatButtonModule, MatCheckboxModule, MatInputModule, MatCardModule, MatDialogModule, MatNativeDateModule, MAT_DATE_LOCALE, MatPaginatorModule, MatSortModule, MatSnackBarModule} from '@angular/material';
+import {MatButtonModule, MatCheckboxModule, MatInputModule, MatCardModule, MatDialogModule, MatNativeDateModule,
+        MAT_DATE_LOCALE, MatPaginatorModule, MatSortModule, MatSnackBarModule} from '@angular/material';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';

@@ -5,6 +5,7 @@ import { MatDialogConfig, MatDialog, MatTableDataSource, MatSort, MatPaginator }
 import { CustomerManageComponent } from '../customer-manage/customer-manage.component';
 import { FormControl } from '@angular/forms';
 import { CustomerTagsService } from 'src/app/services/customer-tags.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-customer-list',
@@ -12,14 +13,14 @@ import { CustomerTagsService } from 'src/app/services/customer-tags.service';
   styleUrls: ['./customer-list.component.scss']
 })
 export class CustomerListComponent implements OnInit {
-  customersToDatatable: MatTableDataSource<any>;
+  customersToDatatable: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: string[] = ['ID', 'name', 'adres', 'place', 'phones', 'actions'];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   filter = '';
 
   tagFilter = new FormControl();
-  tagList: string[] = ['apteka'];
+  tagList: string[] = [];
 
   constructor(private db: CustomersService,
     private router: Router,
@@ -32,17 +33,6 @@ export class CustomerListComponent implements OnInit {
     this.customerTagService.list().subscribe(list => {
       this.tagList = list.map(el => el.payload.doc.data().tag);
     });
-    // this.tagFilter.valueChanges.subscribe(ft => {
-    //   this.customersToDatatable.filterPredicate = this.filterDataTable;
-      // this.customersToDatatable.filteredData = this.customersToDatatable.filteredData.filter(x => {
-      //   console.log(x);
-      //   if (x.tags) {
-      //     return x.tags.indexOf(this.tagList[0]) !== -1;
-      //   }
-      // });
-      // console.log(ft);
-      // console.log('filteredData', this.customersToDatatable.filteredData);
-    // });
   }
 
   getCustomers() {
@@ -63,27 +53,32 @@ export class CustomerListComponent implements OnInit {
       this.customersToDatatable = new MatTableDataSource(customers);
       this.customersToDatatable.sort = this.sort;
       this.customersToDatatable.paginator = this.paginator;
-      this.customersToDatatable.filterPredicate = this.filterDataTable;
+      this.applyFilter();
+      // this.customersToDatatable.filterPredicate = (data, filter) => {
+      //   console.log('xx', data, filter);
+      //   return true;
+      // };
     });
   }
 
-  filterDataTable(data, filter) {
-    console.log('data ', this.tagList);
-    const result = (data.ID.toLowerCase().indexOf(filter) !== -1 ||
-    (data.name !== null && data.name !== undefined && data.name.toLowerCase().indexOf(filter) !== -1) ||
-    (data.street !== null && data.street !== undefined && data.street.toLowerCase().indexOf(filter) !== -1) ||
-    (data.place !== null && data.place !== undefined && data.place.toLowerCase().indexOf(filter) !== -1)) 
-    &&
-    (data.tags.some(function(v) {
-      return this.tagFilter.value.indexOf(v) >= 0 ;
-    })
-    );
+  // filterDataTable(data, filter) {
+  //   console.log('dane', data.include(t => t.ID === filter ), filter);
+  //   // const result = data.filter;
+  //    const result = (data.data.ID.indexOf(filter.searchData) !== -1); // ||
+  //   // (data.name !== null && data.name !== undefined && data.name.toLowerCase().indexOf(filter) !== -1) ||
+  //   // (data.street !== null && data.street !== undefined && data.street.toLowerCase().indexOf(filter) !== -1) ||
+  //   // (data.place !== null && data.place !== undefined && data.place.toLowerCase().indexOf(filter) !== -1))
+  //   // &&
+  //   // (data.tags.some(function(v) {
+  //   //   return this.tagFilter.value.indexOf(v) >= 0 ;
+  //   // })
+  //   // );
 
-    if (this.tagFilter) {
-      console.log('tagfilter ', this.tagFilter);
-    }
-    return result;
-  }
+  //   // if (this.tagFilter) {
+  //   //   console.log('tagfilter ', this.tagFilter);
+  //   // }
+  //   return true;
+  // }
 
 
   onCreate() {
@@ -102,8 +97,32 @@ export class CustomerListComponent implements OnInit {
   }
 
   applyFilter() {
-    console.log('apply', this.tagFilter.value);
-    this.customersToDatatable.filter = this.filter.trim().toLowerCase();
-    this.customersToDatatable = this.filterDataTable(this.customersToDatatable, this.filter);
+    const filterObject = {
+      searchData: this.filter,
+      tags: this.tagFilter.value
+    };
+
+    this.customersToDatatable.filter = filterObject.searchData;
+    this.customersToDatatable.filterPredicate = (data, f) => {
+      console.log(data.tags.indexOf(this.tagFilter.value));
+      if (
+          (
+            (data.ID !== null && data.ID !== undefined && data.ID.toLowerCase().indexOf(this.filter) > -1) ||
+            (data.name !== null && data.name !== undefined && data.name.toLowerCase().indexOf(this.filter) !== -1) ||
+            (data.street !== null && data.street !== undefined && data.street.toLowerCase().indexOf(this.filter) !== -1) ||
+            (data.place !== null && data.place !== undefined && data.place.toLowerCase().indexOf(this.filter) !== -1)
+          ) &&
+          (
+            (this.tagFilter.value == null) ||
+            (
+              (data.tags != null) &&  data.tags.indexOf(this.tagFilter.value) > -1 // funkcja przeszukiwania tagow
+            )
+          )
+      ) {
+        return true;
+      }
+      return false;
+    };
+    // console.log(this.customersToDatatable);
   }
 }
