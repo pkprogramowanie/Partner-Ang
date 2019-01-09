@@ -19,7 +19,7 @@ export class CustomerListComponent implements OnInit {
   filter = '';
 
   tagFilter = new FormControl();
-  tagList: string[] = [];
+  tagList: string[] = ['apteka'];
 
   constructor(private db: CustomersService,
     private router: Router,
@@ -32,16 +32,17 @@ export class CustomerListComponent implements OnInit {
     this.customerTagService.list().subscribe(list => {
       this.tagList = list.map(el => el.payload.doc.data().tag);
     });
-    this.tagFilter.valueChanges.subscribe(ft => {
-      this.customersToDatatable.filteredData = this.customersToDatatable.filteredData.filter(x => {
-        console.log(x);
-        if (x.tags) {
-          return x.tags.indexOf(this.tagList[0]) !== -1;
-        }
-      });
-      console.log(ft);
-      console.log('filteredData', this.customersToDatatable.filteredData);
-    });
+    // this.tagFilter.valueChanges.subscribe(ft => {
+    //   this.customersToDatatable.filterPredicate = this.filterDataTable;
+      // this.customersToDatatable.filteredData = this.customersToDatatable.filteredData.filter(x => {
+      //   console.log(x);
+      //   if (x.tags) {
+      //     return x.tags.indexOf(this.tagList[0]) !== -1;
+      //   }
+      // });
+      // console.log(ft);
+      // console.log('filteredData', this.customersToDatatable.filteredData);
+    // });
   }
 
   getCustomers() {
@@ -62,20 +63,28 @@ export class CustomerListComponent implements OnInit {
       this.customersToDatatable = new MatTableDataSource(customers);
       this.customersToDatatable.sort = this.sort;
       this.customersToDatatable.paginator = this.paginator;
-      this.customersToDatatable.filterPredicate = (data, filter) => {
-        const result = (data.ID.toLowerCase().indexOf(filter) !== -1 ||
-          (data.name !== null && data.name !== undefined && data.name.toLowerCase().indexOf(filter) !== -1) ||
-          (data.street !== null && data.street !== undefined && data.street.toLowerCase().indexOf(filter) !== -1) ||
-          (data.place !== null && data.place !== undefined && data.place.toLowerCase().indexOf(filter) !== -1));
-
-        if (this.tagFilter) {
-          console.log('tagfilter ', this.tagFilter);
-        }
-        return result;
-
-      };
+      this.customersToDatatable.filterPredicate = this.filterDataTable;
     });
   }
+
+  filterDataTable(data, filter) {
+    console.log('data ', this.tagList);
+    const result = (data.ID.toLowerCase().indexOf(filter) !== -1 ||
+    (data.name !== null && data.name !== undefined && data.name.toLowerCase().indexOf(filter) !== -1) ||
+    (data.street !== null && data.street !== undefined && data.street.toLowerCase().indexOf(filter) !== -1) ||
+    (data.place !== null && data.place !== undefined && data.place.toLowerCase().indexOf(filter) !== -1)) 
+    &&
+    (data.tags.some(function(v) {
+      return this.tagFilter.value.indexOf(v) >= 0 ;
+    })
+    );
+
+    if (this.tagFilter) {
+      console.log('tagfilter ', this.tagFilter);
+    }
+    return result;
+  }
+
 
   onCreate() {
     const dialogConfig = new MatDialogConfig();
@@ -93,6 +102,8 @@ export class CustomerListComponent implements OnInit {
   }
 
   applyFilter() {
+    console.log('apply', this.tagFilter.value);
     this.customersToDatatable.filter = this.filter.trim().toLowerCase();
+    this.customersToDatatable = this.filterDataTable(this.customersToDatatable, this.filter);
   }
 }
